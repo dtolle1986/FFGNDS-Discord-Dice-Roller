@@ -1,3 +1,9 @@
+# 2.8.0
+    move db to firestore
+    move sendmessage to universal function in index.js
+    fixed #26
+    updated npm packages
+    moved very far away from promises and toward async/await instead
 # 2.7.1
     fixed rr print error
     fixed char crit error
@@ -126,7 +132,7 @@
   -lots more
 
 2.0.4
-  -moved all config data to config.js
+  -moved all config data to config.json
   -setup one click update
   -added a node_modules check to start.bat/command
 

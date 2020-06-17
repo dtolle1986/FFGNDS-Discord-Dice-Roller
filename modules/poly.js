@@ -1,5 +1,5 @@
 const dice = require("./").dice;
-const config = require("../config.js").config;
+const config = require("../config.json");
 
 function poly(params, message) {
 	let text = 'rolled:';

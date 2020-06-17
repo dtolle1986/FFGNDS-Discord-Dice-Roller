@@ -1,5 +1,5 @@
 # FFGNDS-Discord-Dice-Roller
-CREDIT: Vampwood for conceiving the bot, and SkyJedi for substantial contributions to the project.
+CREDIT: Vampwood for conceiving the client, and SkyJedi for substantial contributions to the project.
 
 A Discord Bot Companion for the SW:EotE, AoR, FnD, Genesys, and L5R RPG
 

@@ -1,5 +1,6 @@
-const path = require('./config').path;
-const token = require('./config').config.token;
-const { ShardingManager } = require('discord.js');
-const manager = new ShardingManager(path, { token: token });
-manager.spawn().catch(error => console.error(new Date(), error));
+const path = require('path');
+const {token} = require('./config');
+const {ShardingManager} = require('discord.js');
+const manager = new ShardingManager(path.join(__dirname, '/index.js'), {token});
+
+manager.spawn().catch(console.error);

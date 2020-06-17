@@ -1,20 +1,19 @@
-const buildEmojiDB = require('./buildEmojiDB').buildEmojiDB;
+const { buildEmojiDB } = require('./buildEmojiDB');
 
-const admin = (bot, message, params, command) => {
-	switch (command) {
-		case "logout":
-			bot.logout();
-			break;
-		case "fix":
-			break;
-		case "test":
-			break;
-		case "build":
-			buildEmojiDB(bot);
-			break;
-		default:
-			break;
-	}
+const admin = async (client, message, params, command) => {
+    switch(command) {
+        case 'logout':
+            break;
+        case 'fix':
+            break;
+        case 'test':
+            break;
+        case 'build':
+            await buildEmojiDB(client);
+            break;
+        default:
+            break;
+    }
 };
 
 exports.admin = admin;

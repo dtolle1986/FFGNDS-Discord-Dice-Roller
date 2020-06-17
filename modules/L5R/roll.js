@@ -1,7 +1,6 @@
-const config = require('../../config').config;
+const config = require('../../config.json');
 const emoji = require('../').emoji;
-const writeData = require('../').writeData;
-const readData = require('../').readData;
+const { writeData, readData } = require('../data');
 const dice = ['white', 'black', 'success', 'opportunity', 'strife', 'explosiveSuccess'];
 const rollDice = require('../').dice;
 const sleep = require('../').sleep;
@@ -16,10 +15,10 @@ const diceFaces = {
 	strife: ['t']
 };
 
-async function roll(params, message, bot, desc, channelEmoji, add) {
+async function roll(params, message, client, desc, channelEmoji, add) {
 	new Promise(async resolve => {
 		let diceResult = initDiceResult();
-		if (add) diceResult.roll = {...diceResult.roll, ...await readData(bot, message, 'diceResult')};
+		if (add) diceResult.roll = {...diceResult.roll, ...await readData(client, message, 'diceResult', channelEmoji)};
 		if (!params[0] || !params.length) {
 			message.reply('No dice rolled.');
 			return;
@@ -43,17 +42,17 @@ async function roll(params, message, bot, desc, channelEmoji, add) {
 
 		diceResult = countSymbols(diceResult);
 		printResults(diceResult, message, desc, channelEmoji, messageGif).catch(console.error);
-		writeData(bot, message, 'diceResult', diceResult.roll);
+		writeData(client, message, 'diceResult', diceResult.roll);
 		resolve()
 	}).catch(error => message.reply(`That's an Error! ${error}`));
 
 }
 
-async function keep(params, message, bot, desc, channelEmoji, reroll) {
+async function keep(params, message, client, desc, channelEmoji, reroll) {
 	new Promise(async resolve => {
 			let object = {black: [], white: [], success: [], opportunity: [], strife: [], explosiveSuccess: []};
 			let diceResult = initDiceResult(), keeperResults = initDiceResult(), messageGif, textGif = '';
-			let roll = {...diceResult.roll, ...await readData(bot, message, 'diceResult')};
+			let roll = {...diceResult.roll, ...await readData(client, message, 'diceResult', channelEmoji)};
 			if (!diceResult) {
 				resolve();
 				return;
@@ -115,7 +114,7 @@ async function keep(params, message, bot, desc, channelEmoji, reroll) {
 
 		diceResult = countSymbols(keeperResults);
 		printResults(diceResult, message, desc, channelEmoji, messageGif).catch(console.error);
-			writeData(bot, message, 'diceResult', keeperResults.roll);
+			writeData(client, message, 'diceResult', keeperResults.roll);
 		}
 	).catch(error => message.reply(`That's an Error! ${error}`));
 }

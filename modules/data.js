@@ -1,58 +1,46 @@
-const firebase = require('firebase');
+const { db } = require('../firestore');
+const { prefix } = require('../config.json');
 
-function readData(bot, message, dataSet) {
-	return new Promise(resolve => {
-		let dbRef = firebase.database().ref(`${bot.user.username}/${dataSet}/${message.channel.id}`);
-		if (dataSet === 'prefix') {
-			if (message.guild) dbRef = firebase.database().ref(`${bot.user.username}/${dataSet}/${message.guild.id}/`);
-			else resolve();
-		}
+const readData = async (client, message, dataSet) => {
+    let dbRef = getDbRef(client, message, dataSet);
+    let doc = await dbRef.get();
+    if (!doc.exists) {
+        if (dataSet === 'channelEmoji') return 'swrpg';
+        if (dataSet === 'prefix') return prefix;
+        return {};
+    } else {
+        let data = doc.data()[dataSet];
+        if(!data) data = {};
+        switch(dataSet) {
+            case 'characterStatus':
+                Object.keys(data).forEach((name) => {
+                    if (!data[name].crit) data[name].crit = [];
+                    if (!data[name].obligation) data[name].obligation = {};
+                });
+                break;
+            default:
+                break;
+        }
+        return data;
+    }
+};
 
-		dbRef.once('value').then(snap => {
-			let data = snap.val();
-			switch (dataSet) {
-				case 'prefix':
-					resolve(data);
-					return;
-				case 'diceResult':
-					if (data) data = snap.val()[message.author.id];
-					break;
-				case 'characterStatus':
-					if (data) {
-						Object.keys(data).forEach((name) => {
-							if (!data[name].crit) data[name].crit = [];
-							if (!data[name].obligation) data[name].obligation = {};
-						})
-					}
-					break;
-				default:
-					break;
-			}
-			if (!data) {
-				if (dataSet === 'channelEmoji') resolve('swrpg');
-				resolve({});
-				return;
-			}
-			resolve(data);
-		}, error => {
-			console.error(error);
-			message.channel.send(`Error retrieving data`).catch(console.error);
-			resolve({});
-		});
-	}).catch(error => message.channel.send(`That's an Error! ${error} in readData`));
-}
+const writeData = (client, message, dataSet, data) => {
+    let dbRef = getDbRef(client, message, dataSet);
+    dbRef.set({ [dataSet]: data }).catch(console.error);
+};
 
-function writeData(bot, message, dataSet, data) {
-	return new Promise(resolve => {
-		let dbRef = firebase.database().ref(`${bot.user.username}/${dataSet}/${message.channel.id}`);
-		if (dataSet === 'diceResult') dbRef = firebase.database().ref(`${bot.user.username}/${dataSet}/${message.channel.id}/${message.author.id}`);
-		if (dataSet === 'prefix') dbRef = firebase.database().ref(`${bot.user.username}/${dataSet}/${message.guild.id}/`);
-		dbRef.set(data).then(error => {
-			if (error) console.error(error);
-			resolve()
-		});
-	}).catch(error => message.channel.send(`That's an Error! ${error}`));
-}
+const getDbRef = (client, message, dataSet) => {
+    let dbRef = db.collection('Bots')
+                  .doc(`${client.user.username}_Discord`)
+                  .collection('Guild')
+                  .doc(message.guild.id)
+                  .collection('Channel')
+                  .doc(message.channel.id);
+    if (dataSet === 'diceResult') dbRef = dbRef.collection('User').doc(message.author.id);
+    dbRef = dbRef.collection('Data').doc(dataSet);
+    return dbRef;
+};
 
 exports.readData = readData;
 exports.writeData = writeData;

@@ -1,19 +1,16 @@
-const config = require('../config').config;
+const config = require('../config.json');
 const emoji = require('../emoji.json');
 
-const print = (str, bot, channelEmoji) => {
-	return new Promise(resolve => {
-		bot.shard.broadcastEval(`(${findGuild}).call(this, '${config[channelEmoji]}', '${str}')`)
-			.then(emojiArray => resolve(emojiArray.find(emoji => emoji)))
-			.catch(console.error);
-	});
+const print = async (str, client, channelEmoji) => {
+    const emojiArray = await client.shard.broadcastEval(`(${findGuild}).call(this, '${config[channelEmoji]}', '${str}')`);
+    return emojiArray.find(emoji => emoji);
 };
 
 const findGuild = (guildID, emojiID) => {
-	const guild = this.guilds.get(guildID);
-	if (!guild) return emojiID;
-	const emoji = guild.emojis.find(val => val.name === emojiID);
-	return emoji ? emoji.toString() : emojiID;
+    const guild = this.guilds.cache.get(guildID);
+    if (!guild) return emojiID;
+    const emoji = guild.emojis.cache.find(val => val.name === emojiID);
+    return emoji ? emoji.toString() : emojiID;
 };
 
 const emojiSearch = (string, type = 'swrpg') => emoji[type][string];
