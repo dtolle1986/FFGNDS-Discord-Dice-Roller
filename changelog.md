@@ -1,9 +1,9 @@
+# 2.8.1
+    fixed DM
+    fixed chat remove
+    fixed prefix server wide
 # 2.8.0
-    move db to firestore
-    move sendmessage to universal function in index.js
-    fixed #26
-    updated npm packages
-    moved very far away from promises and toward async/await instead
+    lots of shit
 # 2.7.1
     fixed rr print error
     fixed char crit error

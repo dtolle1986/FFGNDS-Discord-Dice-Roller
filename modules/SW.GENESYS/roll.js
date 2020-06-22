@@ -1,5 +1,5 @@
 const config = require('../../config.json');
-const { diceFaces, order, symbols, colo } = require('./');
+const { diceFaces, order, symbols } = require('./');
 const { dice, emoji, sleep, writeData } = require('../');
 const { flatten } = require('lodash');
 const finalText = (text) => text.length > 1500 ? 'Too many dice to display.' : text;
@@ -24,7 +24,7 @@ const roll = async (client, message, params, channelEmoji, desc, diceResult, dic
     let messageGif, textGif = printAnimatedEmoji(diceOrder, message, channelEmoji);
     if (textGif) messageGif = await message.channel.send(finalText(textGif)).catch(console.error);
     writeData(client, message, 'diceResult', diceResult.roll);
-    await sleep(1000);
+    await sleep(desc.includes('roll') ? 0: 1000);
     printResults(diceResult, message, desc, channelEmoji, messageGif);
     return diceResult;
 };

@@ -1,10 +1,11 @@
 let functions = require('./');
 const { readData, writeData } = require('../data');
-const { sleep } = require('../');
 const main = require('../../index');
 
 const initiative = async (client, message, params, channelEmoji) => {
     let initiativeOrder = await readData(client, message, 'initiativeOrder');
+    let merge = false;
+    let write = true;
     if (Object.keys(initiativeOrder).length === 0) initiativeOrder = initializeInitOrder();
     if (!initiativeOrder.newslots) initiativeOrder.newslots = [];
     if (!initiativeOrder.slots) initiativeOrder.slots = [];
@@ -13,6 +14,7 @@ const initiative = async (client, message, params, channelEmoji) => {
         //roll for initiativeOrder
         case 'roll':
         case 'r':
+            merge = true;
             if (!params[0] || params[0] === 'npc' || params[0] === 'pc') {
                 main.sendMessage(message, 'No dice defined.  ie \'!init roll yygg npc/pc\'');
                 return;
@@ -124,10 +126,12 @@ const initiative = async (client, message, params, channelEmoji) => {
             } else message.reply(`There are not ${slot} slots!`);
             break;
         default:
+            write = false;
             break;
     }
-    writeData(client, message, 'initiativeOrder', initiativeOrder);
-    if (command === 'r' || command === 'roll') await sleep(1200);
+    if(write) {
+        writeData(client, message, 'initiativeOrder', initiativeOrder, merge);
+    }
     if (initiativeOrder.slots[0]) printInitiativeOrder(initiativeOrder, message);
     else main.sendMessage(message, 'No initiative order is set!');
 };
@@ -174,7 +178,7 @@ const printInitiativeOrder = (initiativeOrder, message) => {
     for(let i = 0; i < initiativeOrder.turn - 1; i++) {
         faces += getFace(initiativeOrder.slots[i].type);
     }
-    main.sendMessage(message, 'Round: ' + initiativeOrder.round + ' Turn: ' + initiativeOrder.turn + '\nInitiative Order: ')
+    main.sendMessage(message, 'Round: ' + initiativeOrder.round + ' Turn: ' + initiativeOrder.turn + ' Initiative Order: \n')
            ;
     if (faces === '') return;
     if (faces.length > 1500) faces = `Initiative order too long to display.`;

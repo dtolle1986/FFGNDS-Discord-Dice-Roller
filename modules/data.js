@@ -10,7 +10,7 @@ const readData = async (client, message, dataSet) => {
         return {};
     } else {
         let data = doc.data()[dataSet];
-        if(!data) data = {};
+        if (!data) data = {};
         switch(dataSet) {
             case 'characterStatus':
                 Object.keys(data).forEach((name) => {
@@ -25,19 +25,26 @@ const readData = async (client, message, dataSet) => {
     }
 };
 
-const writeData = (client, message, dataSet, data) => {
+const writeData = (client, message, dataSet, data, merge = false) => {
     let dbRef = getDbRef(client, message, dataSet);
-    dbRef.set({ [dataSet]: data }).catch(console.error);
+    dbRef.set({ [dataSet]: data }, { merge }).catch(console.error);
 };
 
 const getDbRef = (client, message, dataSet) => {
-    let dbRef = db.collection('Bots')
-                  .doc(`${client.user.username}_Discord`)
-                  .collection('Guild')
-                  .doc(message.guild.id)
-                  .collection('Channel')
-                  .doc(message.channel.id);
-    if (dataSet === 'diceResult') dbRef = dbRef.collection('User').doc(message.author.id);
+    let dbRef = db.collection('Bots').doc(`${client.user.username}_Discord`);
+
+    if (message.guild) {
+        dbRef = dbRef.collection('Guild').doc(message.guild.id);
+    }
+
+    if (dataSet !== 'prefix') {
+        dbRef = dbRef.collection('Channel').doc(message.channel.id);
+    }
+
+    if (dataSet === 'diceResult') {
+        dbRef = dbRef.collection('User').doc(message.author.id);
+    }
+
     dbRef = dbRef.collection('Data').doc(dataSet);
     return dbRef;
 };

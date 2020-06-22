@@ -1,6 +1,7 @@
 const functions = require('./');
 const { readData, writeData } = require('../data');
 const main = require('../../index');
+const { indexOf, upperFirst } = require('lodash');
 
 const char = async (client, message, params, channelEmoji) => {
     //setting the channel specific variables
@@ -82,7 +83,7 @@ const char = async (client, message, params, channelEmoji) => {
                     character.crit.push(modifier);
                     text += `${characterName} has added Crit:${modifier} to their Critical Injuries.\n`;
                 } else if (modifier < 0) {
-                    let index = _.indexOf(character.crit, -modifier);
+                    let index = indexOf(character.crit, -modifier);
                     if (index > -1) {
                         character.crit.splice(index, 1);
                         text += `${characterName} has removed Crit:${-modifier} from their Critical Injuries.\n`;
@@ -174,7 +175,8 @@ const char = async (client, message, params, channelEmoji) => {
             break;
 
         case 'remove':
-            character = {};
+            character = false;
+            delete characterStatus[characterName]
             text += `${characterName} has been removed.`;
             break;
 
@@ -201,7 +203,7 @@ const buildCharacterStatus = (name, character) => {
     ['obligation', 'duty', 'morality', 'inventory', 'misc'].forEach(type => {
         if (character[type]) {
             if (Object.keys(character[type]).length > 0) {
-                text += `\n${_.upperFirst(type)}: \``;
+                text += `\n${upperFirst(type)}: \``;
                 Object.keys(character[type]).forEach(name => {
                     text += `${name}: ${character[type][name]}  `;
                 });
