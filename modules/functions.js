@@ -36,8 +36,12 @@ const polyhedral = (sides, str, message) => {
 };
 
 const buildPrefix = async (client, message) => {
-    let prefix = await readData(client, message, 'prefix');
+    let prefix = main.serverPrefixes[message.guild.id];
+
+    if (!prefix) prefix = await readData(client, message, 'prefix');
     if (!prefix) prefix = config.prefix;
+
+    main.addPrefix(message, prefix);
 
     if (message.content.includes(client.user.id) && message.content.includes('prefix')) {
         main.sendMessage(message, `${client.user.username} is using ${prefix} as the activator for this server`);

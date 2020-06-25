@@ -176,13 +176,13 @@ const char = async (client, message, params, channelEmoji) => {
 
         case 'remove':
             character = false;
-            delete characterStatus[characterName]
+            delete characterStatus[characterName];
             text += `${characterName} has been removed.`;
             break;
 
         case 'list':
             if (Object.keys(characterStatus).length < 1) text += 'No characters.';
-            else Object.keys(characterStatus)
+            else Object.keys(characterStatus).sort()
                        .forEach(name => text += `${buildCharacterStatus(name, characterStatus[name])}\n\n`);
             break;
         default:

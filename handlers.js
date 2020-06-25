@@ -16,7 +16,6 @@ const onReady = client => {
 };
 
 //Called whenever a users send a message to the server
-
 const onMessage = async (message, client) => {
     let prefix, params, command, desc, channelEmoji;
 
@@ -45,7 +44,9 @@ const onMessage = async (message, client) => {
     if (!command || command === 'play') return;
 
     //get channelEmoji
-    channelEmoji = await readData(client, message, 'channelEmoji').catch(console.error);
+    channelEmoji = main.channelEmoji[message.channel.id];
+    if (!channelEmoji) channelEmoji = await readData(client, message, 'channelEmoji').catch(console.error);
+    main.addChannelEmoji(message, channelEmoji);
 
     //check for Patron
     if (config.patronDiceRole && config.patreonGuild && config[`${channelEmoji}Patreon`]) {
@@ -84,6 +85,7 @@ const onMessage = async (message, client) => {
         case 'genesys':
         case 'l5r':
             writeData(client, message, 'channelEmoji', command);
+            main.addChannelEmoji(message, command);
             main.sendMessage(message, `${client.user.username} will now use ${command} dice`);
             break;
         case 'prefix':

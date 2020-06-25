@@ -17,6 +17,7 @@ const prefix = async (client, message, params) => {
         return;
     }
     writeData(client, message, 'prefix', params[0][0]);
+    main.addPrefix(message, params[0][0]);
     main.sendMessage(message, `${client.user.username} will now use ${params[0][0]} as the activator for this server`);
 };
 

@@ -6,7 +6,7 @@ const crit = (message, params, channelEmoji) => {
     if (params.length > 0) {
         if (params[0].includes('?')) {
             const query = params[0].replace(/\D/g, '');
-            main.sendMessage(message, 'Crit ' + query + '**: ' + textCrit(query, channelEmoji));
+            main.sendMessage(message, 'Crit ' + query + ': ' + textCrit(query, channelEmoji));
             return;
         }
     }

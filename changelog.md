@@ -1,3 +1,6 @@
+# 2.8.2
+    let prefixes get stored locally between restarts to reduce DB lookups
+    fixed crit again
 # 2.8.1
     fixed DM
     fixed chat remove
