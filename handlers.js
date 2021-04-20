@@ -25,10 +25,10 @@ const onMessage = async (message, client) => {
     //check to see if bot can send messages on channel and external emoji can be used
     if (message.channel.type !== 'dm') {
         if (!message.channel.permissionsFor(client.user).has('SEND_MESSAGES')) return;
-        if (!message.channel.permissionsFor(client.user).has('USE_EXTERNAL_EMOJIS')) {
-            main.sendMessage(message, `Please enable \'Use External Emoji\' for ${client.user.username}`);
-            return;
-        }
+        // if (!message.channel.permissionsFor(client.user).has('USE_EXTERNAL_EMOJIS')) {
+        //     main.sendMessage(message, `Please enable \'Use External Emoji\' for ${client.user.username}`);
+        //     return;
+        // }
     }
 
     //build the prefix

@@ -13,13 +13,16 @@ client.login(config.token).catch(error => console.error(error));
 
 client.on('message', msg => handlers.onMessage(msg, client));
 client.on('ready', () => handlers.onReady(client));
+client.on('shardDisconnect', (event, id) => {
+    console.log(`Shard ${id} Disconnected!!!`)
+});
 
 const sendMessage = (message, text, attachment) => {
     message.channel.send(text, attachment && attachment).catch(console.error);
 };
 
 const addPrefix = (message, prefix) => {
-    serverPrefixes[message.guild.id] = prefix;
+    if(message.guild) serverPrefixes[message.guild.id] = prefix;
 };
 const addChannelEmoji = (message, emoji) => {
     channelEmoji[message.channel.id] = emoji;

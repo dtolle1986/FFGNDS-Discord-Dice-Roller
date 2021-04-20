@@ -31,7 +31,7 @@ const textCrit = (total, channelEmoji) => {
     let purpleDiamond = emoji('purplediamond', channelEmoji);
     let text = purpleDiamond;
 
-    switch(true) {
+    switch (true) {
         case (total < 6):
             text += '**Minor Nick:** The target suffers 1 strain.';
             break;
@@ -150,7 +150,7 @@ const textShipCrit = (total, channelEmoji) => {
     //build textCrit
     let purpleDiamond = emoji('purplediamond', channelEmoji);
     let text = purpleDiamond;
-    switch(true) {
+    switch (true) {
         case (total <= 9):
             text += '**Mechanical Stress**: The ship or vehicle suffers one point of system strain.';
             break;
@@ -164,7 +164,7 @@ const textShipCrit = (total, channelEmoji) => {
             text += '**Knocked Off Course**: A particularly strong blast or impact sends the ship or vehicle careening off in a new direction. On his next turn, the pilot cannot execute any maneuvers and must make a Piloting check to regain control. The difficulty of this check depends on his current speed.';
             break;
         case (total >= 37 && total <= 45):
-            text += '**Tailspin**: All firing from the ship or vehicle suffers ' + emoji('black', channelEmoji) + ' ' +initi
+            text += '**Tailspin**: All firing from the ship or vehicle suffers ' + emoji('black', channelEmoji) + ' ' +
                 emoji('black', channelEmoji) +
                 ' dice until the end of the pilot’s next turn. All crew members are immobilized until the end of the pilot’s next turn.';
             break;

@@ -36,8 +36,7 @@ const polyhedral = (sides, str, message) => {
 };
 
 const buildPrefix = async (client, message) => {
-    let prefix = main.serverPrefixes[message.guild.id];
-
+    let prefix = message.guild ? main.serverPrefixes[message.guild.id] : config.prefix;
     if (!prefix) prefix = await readData(client, message, 'prefix');
     if (!prefix) prefix = config.prefix;
 
@@ -104,11 +103,12 @@ const buildDescriptor = (params) => {
 const buildStats = (client, message) => {
     main.sendMessage(message, `Currently there are ${client.shard.count} shards.`);
     client.shard.broadcastEval('this.guilds.cache.size')
-        .then(results => main.sendMessage(message, `Currently on ${results.reduce((prev, val) => prev + val, 0)} servers.`))
-        .catch(console.error);
+          .then(results => main.sendMessage(message, `Currently on ${results.reduce((prev, val) => prev +
+              val, 0)} servers.`))
+          .catch(console.error);
     client.shard.broadcastEval(`(${buildMemberList}).call(this)`)
-        .then(list => main.sendMessage(message, `Currently assisting ${sum(list)} users.`))
-        .catch(console.error);
+          .then(list => main.sendMessage(message, `Currently assisting ${sum(list)} users.`))
+          .catch(console.error);
 };
 
 const buildMemberList = () => {
@@ -120,16 +120,16 @@ const buildMemberList = () => {
 const checkPatreon = (client, authorID) => {
     return new Promise((resolve, reject) => {
         client.shard.broadcastEval(`(${checkRoles}).call(this, '${authorID}', '${config.patreonGuild}', '${config.patronDiceRole}')`)
-            .then(array => resolve(array.some(toggle => toggle)))
-            .catch(reject);
+              .then(array => resolve(array.some(toggle => toggle)))
+              .catch(reject);
     });
 };
 
 const checkPatreonServer = (client, ownerID) => {
     return new Promise((resolve, reject) => {
         client.shard.broadcastEval(`(${checkRoles}).call(this, '${ownerID}', '${config.patreonGuild}', '${config.patronMegaRole}')`)
-            .then(array => resolve(array.some(toggle => toggle)))
-            .catch(reject);
+              .then(array => resolve(array.some(toggle => toggle)))
+              .catch(reject);
     });
 };
 

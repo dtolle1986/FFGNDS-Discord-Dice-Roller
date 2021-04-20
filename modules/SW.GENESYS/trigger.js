@@ -31,11 +31,10 @@ const trigger = async (client, message, type) => {
         return;
     }
 
-    for(let i = 0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
         target += list[i].value;
         if (target > roll) {
-            main.sendMessage(message, `${list[i].name}'s ${list[i][type]} ${type} has been triggered.`)
-                   .catch(console.error);
+            main.sendMessage(message, `${list[i].name}'s ${list[i][type]} ${type} has been triggered.`);
             break;
         }
     }

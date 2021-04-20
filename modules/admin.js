@@ -2,7 +2,9 @@ const { buildEmojiDB } = require('./buildEmojiDB');
 
 const admin = async (client, message, params, command) => {
     switch(command) {
-        case 'logout':
+        case 'restart':
+            await message.channel.send('Restarting, Sir!')
+            await client.shard.respawnAll();
             break;
         case 'fix':
             break;
