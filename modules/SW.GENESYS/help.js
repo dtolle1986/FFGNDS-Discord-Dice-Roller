@@ -2,9 +2,9 @@ const { upperFirst } = require('lodash');
 const { MessageEmbed } = require('discord.js');
 const main = require('../../index');
 
-const help = (client, message, topic, prefix) => {
-    const embed = new MessageEmbed().setColor('031763');
-    switch(topic) {
+const help = ({  message, params = [], prefix }) => {
+    const embed = new MessageEmbed().setColor('DARK_NAVY');
+    switch(params[0]) {
         case 'destiny':
         case 'd':
             embed.setTitle('**Destiny Pool Help**')
@@ -149,8 +149,8 @@ const help = (client, message, topic, prefix) => {
                  .addField('Role playing games by Fantasy Flight Games', `[Edge of the Empire](https://www.fantasyflightgames.com/en/products/star-wars-edge-of-the-empire), [Force and Destiny](https://www.fantasyflightgames.com/en/products/star-wars-force-and-destiny), [Age of Rebellion](https://www.fantasyflightgames.com/en/products/star-wars-age-ofrebellion),[Genesys](https://www.fantasyflightgames.com/en/products/genesys), [Legends of the Five Rings](https://www.fantasyflightgames.com/en/legend-of-the-five-rings-roleplaying-game)`);
             break;
     }
-    main.sendMessage(message, { embed });
+    main.sendMessage({ message, embed });
 
 };
 
-exports.help = help;
+module.exports = help;

@@ -4,7 +4,7 @@ const { readData, writeData } = require('../data');
 const main = require('../../index');
 
 
-const destiny = async (client, message, params, channelEmoji) => {
+const destiny = async ({ client, message, params, channelEmoji }) => {
     let type, pointNameLight, pointNameDark;
     let destinyBalance = await readData(client, message, 'destinyBalance');
     if (channelEmoji === 'genesys') {
@@ -75,7 +75,7 @@ const destiny = async (client, message, params, channelEmoji) => {
         case 'player':
         case 'p':
             if (destinyBalance.light <= 0) {
-                main.sendMessage(message, `No ${pointNameLight} points available, request will be ignored`);
+                main.sendMessage({ message, text: `No ${pointNameLight} points available, request will be ignored` });
                 break;
             } else {
                 destinyBalance.light--;
@@ -89,7 +89,7 @@ const destiny = async (client, message, params, channelEmoji) => {
         case 'gm':
         case 'g':
             if (destinyBalance.dark <= 0) {
-                main.sendMessage(message, `No ${pointNameDark} points available, request will be ignored`);
+                main.sendMessage({ message, text: `No ${pointNameDark} points available, request will be ignored` });
                 break;
             } else {
                 destinyBalance.dark--;
@@ -99,7 +99,8 @@ const destiny = async (client, message, params, channelEmoji) => {
             }
         case 'roll':
         case 'r':
-            let destinyRoll = await functions.roll(client, message, ['w'], channelEmoji, `${type} roll`);
+            let destinyRoll = await functions.roll({ client, message, params: ['w'], channelEmoji, desc: `${type} roll`
+    });
             destinyBalance.light = +destinyBalance.light + +destinyRoll.results.lightpip;
             destinyBalance.dark = +destinyBalance.dark + +destinyRoll.results.darkpip;
             break;
@@ -124,10 +125,10 @@ const printDestinyBalance = (destinyBalance, channelEmoji, message, type) => {
     destinyBalance.face = '';
     for(let i = 1; i <= destinyBalance.light; i++) destinyBalance.face += emoji('lightside', channelEmoji);
     for(let i = 1; i <= destinyBalance.dark; i++) destinyBalance.face += emoji('darkside', channelEmoji);
-    main.sendMessage(message, `${type} Points: `);
+    main.sendMessage({ message, text: `${type} Points: ` });
     if (destinyBalance.face !== '') {
         if (destinyBalance.face.length > 1500) destinyBalance.face = `Too many ${type} Points to display.`;
-        main.sendMessage(message, destinyBalance.face);
+        main.sendMessage({ message, text: destinyBalance.face });
     }
 }
 

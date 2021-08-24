@@ -1,6 +1,6 @@
-const { buildEmojiDB } = require('./buildEmojiDB');
+const build = require('./build');
 
-const admin = async (client, message, params, command) => {
+const admin = async ({ client, message, command }) => {
     switch(command) {
         case 'restart':
             await message.channel.send('Restarting, Sir!')
@@ -11,11 +11,12 @@ const admin = async (client, message, params, command) => {
         case 'test':
             break;
         case 'build':
-            await buildEmojiDB(client);
+            await build(client);
             break;
         default:
             break;
     }
 };
 
-exports.admin = admin;
+module.exports = admin;
+

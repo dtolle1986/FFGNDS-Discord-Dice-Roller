@@ -1,6 +1,6 @@
 const functions = require('./');
 
-async function commands(client, message, params, command, desc, channelEmoji, prefix) {
+async function commands({ client, message, params, command, desc, channelEmoji, prefix }) {
 	switch (command) {
 		case 'roll':
 		case 'r':
@@ -26,4 +26,4 @@ async function commands(client, message, params, command, desc, channelEmoji, pr
 	}
 }
 
-exports.commands = commands;
+module.exports = commands;

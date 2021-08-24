@@ -1,3 +1,6 @@
+# 2.9.0
+    updated discord.js and everything else
+    added babybot for patreon lookups
 # 2.8.2
     let prefixes get stored locally between restarts to reduce DB lookups
     fixed crit again

@@ -147,7 +147,7 @@ let gleeps = {
     ]
 };
 
-const gleepglop = (client, message, channelEmoji) => {
+const gleepglop = ({ message, channelEmoji }) => {
     message.reply(`A wild ${sample(gleeps[channelEmoji.includes('genesys') ? 'genesys' : 'swrpg'])} appears!`);
 }
 

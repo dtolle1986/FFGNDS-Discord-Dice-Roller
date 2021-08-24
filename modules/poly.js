@@ -66,4 +66,4 @@ function poly(params, message) {
 	if (text.endsWith('.')) message.reply(text);
 }
 
-exports.poly = poly;
+module.exports = poly;

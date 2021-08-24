@@ -1,5 +1,5 @@
 const fs = require('fs');
-const emoji = require('./printValues').print;
+const config = require('../config.json');
 
 const l5rDice = [
     'black', 'blacks', 'blackst', 'blacket', 'blacko', 'blackot',
@@ -66,7 +66,7 @@ const dice = [
     'whitegif'
 ];
 
-const buildEmojiDB = async (client) => {
+const build = async (client) => {
     const swrpg = await getEmoji('swrpg', client, dice);
     const genesys = await getEmoji('genesys', client, dice);
     const swrpgPatreon = await getEmoji('swrpgPatreon', client, dice);
@@ -83,12 +83,24 @@ const buildEmojiDB = async (client) => {
     }), () => console.log('The file has been saved!'));
 };
 
-getEmoji = (type, client, list) => {
-    return new Promise(resolve => {
-        const data = {};
-        const process = list.map(async key => data[key] = await emoji(key, client, type));
-        Promise.all(process).then(() => resolve(data));
-    });
+const getEmoji = async (channelEmoji, client, list) => {
+    return await findEmoji({ list, client, channelEmoji });
 };
 
-exports.buildEmojiDB = buildEmojiDB;
+const find = (c, { list, guildID }) => {
+    const guild = c.guilds.cache.get(guildID);
+    if (!guild) return;
+    let final = {};
+    list.forEach(emojiName => {
+        const emoji = guild.emojis.cache.find(e => e.name === emojiName);
+        final[emojiName] = emoji ? `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>` : emojiName;
+    });
+    return final;
+};
+
+const findEmoji = async ({ list, client, channelEmoji }) => {
+    const array = await client.shard.broadcastEval(find, { context: { list, guildID: config[channelEmoji] } });
+    return array.find(x => x);
+};
+
+module.exports = build;

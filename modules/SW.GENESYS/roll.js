@@ -4,7 +4,7 @@ const { dice, emoji, sleep, writeData } = require('../');
 const { flatten } = require('lodash');
 const finalText = (text) => text.length > 1500 ? 'Too many dice to display.' : text;
 
-const roll = async (client, message, params, channelEmoji, desc, diceResult, diceOrder) => {
+const roll = async ({ client, message, params=[], channelEmoji, desc, diceResult, diceOrder }) => {
     if (!diceResult) diceResult = initDiceResult();
     if (!params[0]) {
         message.reply('No dice rolled.');

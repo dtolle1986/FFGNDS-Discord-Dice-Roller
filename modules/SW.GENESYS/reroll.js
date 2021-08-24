@@ -6,7 +6,7 @@ const { readData, writeData } = require('../data');
 const asyncForEach = require('../').asyncForEach;
 const symbols = require('./dice').symbols;
 
-const reroll = async (client, message, params, channelEmoji) => {
+const reroll = async ({ client, message, params, channelEmoji }) => {
     let diceResult = await readData(client, message, 'diceResult', channelEmoji);
 
     if (!diceResult) return;
@@ -18,14 +18,14 @@ const reroll = async (client, message, params, channelEmoji) => {
 
     switch(command) {
         case 'add':
-            diceResult = await roll(client, message, params.slice(1), channelEmoji, 'add', diceResult);
+            diceResult = await roll({ client, message, params: params.slice(1), channelEmoji, desc: 'add', diceResult });
             break;
         case 'same':
             let rebuilt = [];
             Object.keys(diceResult.roll).forEach(color => {
                 diceResult.roll[color].forEach(() => rebuilt.push(color));
             });
-            diceResult = await roll(client, message, params, channelEmoji, '', undefined, rebuilt);
+            diceResult = await roll({ client, message, params, channelEmoji, diceOrder: rebuilt });
             break;
         case 'remove':
             target = processType(message, params.slice(1));
@@ -148,6 +148,4 @@ const reroll = async (client, message, params, channelEmoji) => {
     writeData(client, message, 'diceResult', diceResult.roll);
 };
 
-module.exports = {
-    reroll: reroll
-};
+module.exports = reroll;

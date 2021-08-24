@@ -2,28 +2,28 @@ const d100 = require('../').modifierRoll;
 const emoji = require('../').emoji;
 const main = require('../../index');
 
-const crit = (message, params, channelEmoji) => {
+const crit = ({ message, params, channelEmoji }) => {
     if (params.length > 0) {
         if (params[0].includes('?')) {
             const query = params[0].replace(/\D/g, '');
-            main.sendMessage(message, 'Crit ' + query + ': ' + textCrit(query, channelEmoji));
+            main.sendMessage({ message, text: 'Crit ' + query + ': ' + textCrit(query, channelEmoji) });
             return;
         }
     }
     const total = d100(100, params, message);
-    main.sendMessage(message, 'Crit ' + total + ': ' + textCrit(total, channelEmoji));
+    main.sendMessage({ message, text: 'Crit ' + total + ': ' + textCrit(total, channelEmoji) });
 };
 
 const shipcrit = (message, params, channelEmoji) => {
     if (params.length > 0) {
         if (params[0].includes('?')) {
             const query = params[0].replace(/\D/g, '');
-            main.sendMessage(message, 'Ship Crit ' + query + ': ' + textShipCrit(query, channelEmoji));
+            main.sendMessage({ message, text: 'Ship Crit ' + query + ': ' + textShipCrit(query, channelEmoji) });
             return;
         }
     }
     const total = d100(100, params, message);
-    main.sendMessage(message, 'Ship Crit ' + total + ': ' + textShipCrit(total, channelEmoji));
+    main.sendMessage({ message, text: 'Ship Crit ' + total + ': ' + textShipCrit(total, channelEmoji) });
 };
 
 const textCrit = (total, channelEmoji) => {

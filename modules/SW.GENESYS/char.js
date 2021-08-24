@@ -3,7 +3,7 @@ const { readData, writeData } = require('../data');
 const main = require('../../index');
 const { indexOf, upperFirst } = require('lodash');
 
-const char = async (client, message, params, channelEmoji) => {
+const char = async ({ client, message, params, channelEmoji }) => {
     //setting the channel specific variables
     let characterStatus = await readData(client, message, 'characterStatus');
     let characterName, character, modifier = 0, command = 'list';
@@ -16,11 +16,14 @@ const char = async (client, message, params, channelEmoji) => {
     if (!character && command !== 'list' && command !== 'reset') {
         if (command === 'setup' || command === 'add') {
             if (!characterName) {
-                main.sendMessage(message, 'No characterName, !help char for more information');
+                await main.sendMessage({ message, text: 'No characterName, !help char for more information' });
                 return;
             }
         } else {
-            main.sendMessage(message, `${characterName} has not been set up.  Please use !char setup characterName [maxWound] [maxStrain] [credits] to complete setup.`);
+            await main.sendMessage({
+                message,
+                text: `${characterName} has not been set up.  Please use !char setup characterName [maxWound] [maxStrain] [credits] to complete setup.`
+            });
             return;
         }
     }
@@ -190,7 +193,8 @@ const char = async (client, message, params, channelEmoji) => {
 
     }
     if (character) characterStatus[characterName] = { ...character };
-    main.sendMessage(message, text);
+    console.log(text)
+    await main.sendMessage({ message, text });
     writeData(client, message, 'characterStatus', characterStatus);
 };
 
@@ -218,4 +222,4 @@ const buildCharacterStatus = (name, character) => {
     return text;
 };
 
-exports.char = char;
+module.exports = char;

@@ -1,5 +1,5 @@
 const config = require('../config.json');
-const { random, toLower, sum } = require('lodash');
+const { random, toLower } = require('lodash');
 const { readData } = require('./data');
 const main = require('../index');
 
@@ -8,7 +8,7 @@ const dice = sides => random(1, sides);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const asyncForEach = async (array, callback) => {
-    for(let index = 0; index < array.length; index++) {
+    for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array);
     }
 };
@@ -36,14 +36,14 @@ const polyhedral = (sides, str, message) => {
 };
 
 const buildPrefix = async (client, message) => {
-    let prefix = message.guild ? main.serverPrefixes[message.guild.id] : config.prefix;
-    if (!prefix) prefix = await readData(client, message, 'prefix');
+    let prefix = await readData(client, message, 'prefix');
     if (!prefix) prefix = config.prefix;
 
-    main.addPrefix(message, prefix);
-
     if (message.content.includes(client.user.id) && message.content.includes('prefix')) {
-        main.sendMessage(message, `${client.user.username} is using ${prefix} as the activator for this server`);
+        main.sendMessage({
+            message,
+            text: `${client.user.username} is using ${prefix} as the activator for this server`
+        });
     }
     //Ignore messages that dont include with the command symbol
     if (!message.content.includes(prefix)) {
@@ -100,52 +100,10 @@ const buildDescriptor = (params) => {
     return [desc, params];
 };
 
-const buildStats = (client, message) => {
-    main.sendMessage(message, `Currently there are ${client.shard.count} shards.`);
-    client.shard.broadcastEval('this.guilds.cache.size')
-          .then(results => main.sendMessage(message, `Currently on ${results.reduce((prev, val) => prev +
-              val, 0)} servers.`))
-          .catch(console.error);
-    client.shard.broadcastEval(`(${buildMemberList}).call(this)`)
-          .then(list => main.sendMessage(message, `Currently assisting ${sum(list)} users.`))
-          .catch(console.error);
-};
-
-const buildMemberList = () => {
-    let users = 0;
-    this.guilds.cache.forEach(guild => users += +guild.memberCount);
-    return users;
-};
-
-const checkPatreon = (client, authorID) => {
-    return new Promise((resolve, reject) => {
-        client.shard.broadcastEval(`(${checkRoles}).call(this, '${authorID}', '${config.patreonGuild}', '${config.patronDiceRole}')`)
-              .then(array => resolve(array.some(toggle => toggle)))
-              .catch(reject);
-    });
-};
-
-const checkPatreonServer = (client, ownerID) => {
-    return new Promise((resolve, reject) => {
-        client.shard.broadcastEval(`(${checkRoles}).call(this, '${ownerID}', '${config.patreonGuild}', '${config.patronMegaRole}')`)
-              .then(array => resolve(array.some(toggle => toggle)))
-              .catch(reject);
-    });
-};
-
-const checkRoles = (userID, patreonGuild, patronRole) => {
-    const guild = this.guilds.cache.get(patreonGuild);
-    if (!guild) return null;
-    return guild.roles.cache.get(patronRole).members.some(member => member.user.id === userID);
-};
-
 exports.buildCommand = buildCommand;
 exports.buildDescriptor = buildDescriptor;
 exports.buildParams = buildParams;
 exports.buildPrefix = buildPrefix;
-exports.buildStats = buildStats;
-exports.checkPatreon = checkPatreon;
-exports.checkPatreonServer = checkPatreonServer;
 exports.asyncForEach = asyncForEach;
 exports.dice = dice;
 exports.modifierRoll = polyhedral;
