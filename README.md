@@ -1,7 +1,7 @@
 # FFGNDS-Discord-Dice-Roller
 CREDIT: Vampwood for conceiving the client, and SkyJedi for substantial contributions to the project.
 
-A Discord Bot Companion for the Star Wars : Edge of the Empire (SW:EotE), Age of Rebellion (AoR) and Force and Destiny (FnD) RPGs as well as Genesys, and Legend of the Five Rings (L5R) RPGs
+A Discord Bot Companion for the Star Wars : Edge of the Empire (SW:EotE), Age of Rebellion (AoR) and Force and Destiny (FnD) RPGs as well as Genesys, and Legend of the Five Rings (L5R) RPGs 
 
 ## Usage
 
